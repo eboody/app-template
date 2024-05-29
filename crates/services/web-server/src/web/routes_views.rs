@@ -1,9 +1,8 @@
-use crate::web_config;
 use axum::{
 	async_trait,
 	extract::{FromRef, FromRequestParts},
-	http::{request::Parts, StatusCode},
-	response::{Html, IntoResponse, Response},
+	http::request::Parts,
+	response::Html,
 	routing::get,
 	Router,
 };
@@ -59,25 +58,12 @@ async fn handler(TemplateEnv(env): TemplateEnv) -> Html<String> {
 	Html(rendered)
 }
 
-pub async fn styles() -> impl IntoResponse {
-	let styles = std::fs::read_to_string(format!(
-		"{}public/styles.css",
-		&web_config().WEB_FOLDER
-	))
-	.unwrap();
-
-	let response = Response::builder()
-		.status(StatusCode::OK)
-		.header("Content-Type", "text/css")
-		.body(styles)
-		.unwrap();
-
-	response
-}
-
-pub fn template_router() -> Router {
+pub fn routes() -> Router {
 	let reloader = AutoReloader::new(|notifier| {
-		let template_path = format!("{}templates", &web_config().WEB_FOLDER);
+		let template_path = format!(
+			"{}/src/templates",
+			std::env::var("CARGO_MANIFEST_DIR").unwrap()
+		);
 		let mut env = Environment::new();
 		if !cfg!(debug_assertions) {
 			println!("Loading embedded templates...");
@@ -93,8 +79,6 @@ pub fn template_router() -> Router {
 	let state = AppState {
 		reloader: Arc::new(RwLock::new(reloader)),
 	};
-	Router::new()
-		.route("/", get(handler))
-		.route("/styles.css", get(styles))
-		.with_state(state)
+
+	Router::new().route("/", get(handler)).with_state(state)
 }

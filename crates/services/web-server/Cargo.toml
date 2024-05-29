@@ -34,6 +34,7 @@ minijinja = { version = "2.0.1", features = ["loader"] }
 minijinja-autoreload = "2.0.1"
 minijinja-contrib = { version = "2.0.1", features = ["datetime"] }
 minijinja-embed = "2.0.1"
+axum-htmx = "0.5.0"
 
 [dev-dependencies]
 httpc-test = "0.1"
