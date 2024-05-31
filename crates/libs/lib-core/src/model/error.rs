@@ -19,6 +19,7 @@ pub enum Error {
 		max: i64,
 		actual: i64,
 	},
+	CountFail,
 
 	// -- DB
 	UserAlreadyExists {
