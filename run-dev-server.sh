@@ -8,7 +8,7 @@ if [ -z "$TMUX" ]; then
 fi
 
 # Specify the Docker container name
-CONTAINER_NAME="$(current_dir1=$(basename "$PWD"))-postgres-1"
+CONTAINER_NAME="$(basename "$PWD")-postgres-1"
 
 # Create a new tmux window
 tmux new-window -n 'CargoWatch'
