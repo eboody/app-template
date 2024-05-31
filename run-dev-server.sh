@@ -23,7 +23,7 @@ tmux new-window -n 'CargoWatch'
 DOCKER_CHECK="while ! docker ps -q --filter \"status=running\" --filter \"name=^/${CONTAINER_NAME}$\" | grep -q .; do sleep 1; done;"
 CARGO_CMD0="npm run dev --open --prefix frontend"
 BUILD_TYPES="echo \"skipping types\""
-CARGO_CMD1="cargo watch -w crates/services/web-server/src/ -w crates/libs/ -w .cargo/ -w sql/ -s \"${BUILD_TYPES} && cargo run -p web-server\""
+CARGO_CMD1="cargo watch -w crates/services/web-server/src/ -w crates/libs/ -w .cargo/ -w sql/ -s \"${BUILD_TYPES} && cargo run -p web-server\" -i \"templates\" -i \"web-folder\""
 CARGO_CMD2="cargo watch -q -c -w crates/services/web-server/examples/ -x \"run -p web-server --example quick_dev\""
 
 tmux split-window -h
