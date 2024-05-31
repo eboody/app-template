@@ -23,6 +23,14 @@ impl TemplateEnv {
 	}
 }
 
+async fn some_name(TemplateEnv(env): TemplateEnv) -> Html<String> {
+	let tmpl = env.get_template("components/code-block.html").unwrap();
+
+	let rendered = tmpl.render(context! {}).unwrap();
+
+	Html(rendered)
+}
+
 #[async_trait]
 impl<S> FromRequestParts<S> for TemplateEnv
 where
@@ -52,6 +60,36 @@ async fn test_component(TemplateEnv(env): TemplateEnv) -> Html<String> {
 	Html(rendered)
 }
 
+async fn loop_component(TemplateEnv(env): TemplateEnv) -> Html<String> {
+	let template = env
+		.template_from_str(
+			r#"
+<ul>
+{% for item in items %}
+  <li>
+    Index: {{ loop.index }}<br>
+    Zero-based index: {{ loop.index0 }}<br>
+    From end: {{ loop.revindex }}<br>
+    From end zero-based: {{ loop.revindex0 }}<br>
+    First item: {{ loop.first }}<br>
+    Last item: {{ loop.last }}<br>
+    Length of items: {{ loop.length }}
+  </li>
+{% endfor %}
+</ul>
+"#,
+		)
+		.unwrap();
+
+	let items = vec!["Item 1", "Item 2", "Item 3"];
+	let ctx = context! {
+		items => items
+	};
+
+	let rendered = template.render(ctx).unwrap();
+
+	Html(rendered)
+}
 async fn home(TemplateEnv(env): TemplateEnv) -> Html<String> {
 	let tmpl = env.get_template("index.html").unwrap();
 
@@ -91,5 +129,6 @@ pub fn routes() -> Router {
 	Router::new()
 		.route("/", get(home))
 		.route("/test_component", get(test_component))
+		.route("/loop_component", get(loop_component))
 		.with_state(state)
 }
