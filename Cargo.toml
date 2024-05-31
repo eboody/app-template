@@ -37,5 +37,5 @@ derive_more = {version = "1.0.0-beta", features = ["from", "display"] }
 
 [workspace.metadata.scripts]
 db = "docker run --rm --name pg -p 5432:5432 -e POSTGRES_PASSWORD=welcome postgres:16"
-w = "cargo watch -q -c -w crates/services/web-server/src/ -w crates/libs/ -w .cargo/ -x \"run -p web-server\""
+w = "cargo watch -q -c -w crates/services/web-server/src/ -w crates/libs/ -w .cargo/ -x \"run -p web-server\" -i \"templates\""
 wd = "cargo watch -q -c -w crates/services/web-server/examples/ -x \"run -p web-server --example quick_dev\""

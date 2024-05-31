@@ -11,20 +11,33 @@ AWESOME
 <div>
   Hello <strong>World!</strong>
 
-  <input type="text" />
+  <input id="hello-input" type="text" />
   <script>
-    const mySignal = signal("");
-    me("input").value = mySignal.value;
-
-    me("input").on("input", ev => mySignal.value = me(ev).value);
+    me("input").signal = signal("sample text");
+    {
+      let s = me("input").signal;
+      me("input").value = s.value;
+      me("input").on("input", ev => s.value = me(ev).value);
+    }
   </script>
 
   
-  <div id="text">
+  <div>
     <script>
-        let textElement = me();
-        effect(() => textElement.innerText = mySignal.value)
+        let textElement = me().firstChild;
+        effect(() => textElement.textContent = me("#hello-input").signal.value)
     </script>
+<style>
+    me {
+      background-color: blue;
+    }
+    </style>
   </div>
+
+<button hx-get="/test_component"
+    hx-swap="outerHTML"
+>
+    Click Me!
+</button>
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@ use axum::{
 	routing::get,
 	Router,
 };
-use minijinja::{path_loader, Environment};
+use minijinja::{context, path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use std::sync::{Arc, RwLock};
 
@@ -44,7 +44,15 @@ where
 	}
 }
 
-async fn handler(TemplateEnv(env): TemplateEnv) -> Html<String> {
+async fn test_component(TemplateEnv(env): TemplateEnv) -> Html<String> {
+	let tmpl = env.get_template("components/test-component.html").unwrap();
+
+	let rendered = tmpl.render(context! {}).unwrap();
+
+	Html(rendered)
+}
+
+async fn home(TemplateEnv(env): TemplateEnv) -> Html<String> {
 	let tmpl = env.get_template("index.html").unwrap();
 
 	let rendered = tmpl
@@ -80,5 +88,8 @@ pub fn routes() -> Router {
 		reloader: Arc::new(RwLock::new(reloader)),
 	};
 
-	Router::new().route("/", get(handler)).with_state(state)
+	Router::new()
+		.route("/", get(home))
+		.route("/test_component", get(test_component))
+		.with_state(state)
 }

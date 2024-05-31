@@ -1,0 +1,11 @@
+<div>
+  <script>
+    let e = me().firstChild;
+    effect(() => (e.textContent = me("#hello-input").signal.value));
+  </script>
+  <style>
+    me {
+      background-color: red;
+    }
+  </style>
+</div>
