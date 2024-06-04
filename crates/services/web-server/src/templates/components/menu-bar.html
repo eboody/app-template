@@ -1,0 +1,97 @@
+<div class="bar flex-col" role="none">
+  <div class="content flex-col">
+    <button hx-get="/dashboard" hx-swap="none" style="border: none">
+      <img class="logo" alt="logo" src="/square_logo.svg" width="60" />
+    </button>
+    <div class="menu-item flex-row" role="none">
+      <i data-lucide="layout-dashboard" stroke-width="0.9"></i>
+      <!-- <span class="text">Dashboard</span> -->
+    </div>
+    <div role="none" class="menu-item flex-row">
+      <i data-lucide="user" stroke-width="0.9"></i>
+      <!-- <span class="text">Chat</span> -->
+    </div>
+    <div role="none" class="menu-item flex-row">
+      <i data-lucide="settings" stroke-width="0.9"></i>
+      <!-- <span class="text">Settings</span> -->
+    </div>
+  </div>
+  <div class="rights">Early Medical © 2024 PA IP, LLC</div>
+
+  <style>
+    .bar {
+      width: 100px;
+      height: 100vh;
+      background: black;
+      transition: width 0.2s ease;
+      overflow: hidden;
+      cursor: pointer;
+      padding: var(--size-4) 0;
+      color: white;
+      box-shadow: var(--wp--custom--box-shadow--3);
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .logo {
+      margin-top: var(--size-2);
+      margin-bottom: var(--size-6);
+    }
+
+    .bar.expanded {
+      width: 250px;
+    }
+
+    .content,
+    .menu-item {
+      justify-content: start;
+    }
+    .content {
+      width: 90%;
+      height: 100%;
+    }
+
+    .menu-item {
+      width: fit-content;
+      background-color: transparent;
+      border: 1px solid transparent;
+      box-shadow: none;
+      padding: var(--size-3) var(--size-3);
+      white-space: nowrap;
+      overflow: hidden;
+      flex-wrap: nowrap;
+      transition: background 0.3s ease-out;
+      width: 60px;
+    }
+
+    .menu-item:hover {
+      transition: background-color 0.3s ease;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid;
+      border-image: var(--gradient-secondary) 1;
+    }
+
+    .text {
+      margin-left: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .bar.expanded .text {
+      display: inline;
+    }
+
+    .rights {
+      font-size: var(--font-size-0);
+      width: 100%;
+      text-align: center;
+      padding: 0 var(--size-2);
+    }
+
+    button {
+      background-color: transparent;
+      box-shadow: none;
+      border-radius: none;
+      padding: 0;
+    }
+  </style>
+</div>

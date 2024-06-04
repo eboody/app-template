@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/styles.css" />
 
     {% include "modules/signals.html" %}
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <script
       src="https://unpkg.com/htmx.org@1.9.12"
       integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
@@ -29,7 +31,6 @@
           background: var(--gradient-tertiary);
           padding-bottom: 0px;
           padding-block: var(--size-9);
-          padding-top: 0px;
         }
 
         @media (min-width: 1440px) {
@@ -44,7 +45,7 @@
           overflow-y: auto;
         }
       </style>
-
+      {% block menu_bar %} {% endblock %}
       <div id="content">
         <style>
           me {
@@ -61,4 +62,8 @@
       </div>
     </main>
   </body>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
 </html>
