@@ -1,49 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}
-AWESOME
+Early Medical
 {% endblock title %}
 
 {% block content %}
-
-
-
-<div>
-  Hello <strong>World!</strong>
-
-  <input id="hello-input" type="text" />
-  <script>
-    me("input").signal = signal("sample text");
-    {
-      let s = me("input").signal;
-      me("input").value = s.value;
-      me("input").on("input", ev => s.value = me(ev).value);
-    }
-  </script>
-
-  
-  <div>
-    <script>
-        let textElement = me().firstChild;
-        effect(() => textElement.textContent = me("#hello-input").signal.value)
-    </script>
-<style>
-    me {
-      background-color: blue;
-    }
-    </style>
-  </div>
-
-<button hx-get="/test_component"
-    hx-swap="outerHTML"
->
-    Click Me!
-</button>
-
-<button hx-get="/loop_component"
-    hx-swap="outerHTML"
->
-    Click Me!
-</button>
+<div hx-post="/login" hx-trigger="load">
 </div>
 {% endblock %}

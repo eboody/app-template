@@ -6,7 +6,7 @@ use axum::extract::{FromRequestParts, State};
 use axum::http::request::Parts;
 use axum::http::Request;
 use axum::middleware::Next;
-use axum::response::Response;
+use axum::response::{IntoResponse, Redirect, Response};
 use lib_auth::token::{validate_web_token, Token};
 use lib_core::ctx::Ctx;
 use lib_core::model::user::{UserBmc, UserForAuth};
@@ -24,6 +24,32 @@ pub async fn mw_ctx_require(
 
 	ctx?;
 
+	Ok(next.run(req).await)
+}
+
+pub async fn mw_protected_page(
+	cookies: Cookies,
+	req: Request<Body>,
+	next: Next,
+) -> Result<Response> {
+	debug!("{:<12} - mw_protected_page - {req:?}", "MIDDLEWARE");
+
+	//If user navigated to a protected page without a valid token then redirect them to /
+	let token = cookies
+		.get(AUTH_TOKEN)
+		.map(|c| c.value().to_string())
+		.ok_or(CtxExtError::TokenNotInCookie);
+
+	let fetch_mode = req.headers().get("sec-fetch-mode");
+
+	if matches!(token, Err(CtxExtError::TokenNotInCookie)) {
+		println!("{:#?}", req.headers());
+		if let Some(fetch_mode) = fetch_mode {
+			if fetch_mode == "navigate" {
+				return Ok(Redirect::to("/").into_response());
+			}
+		}
+	}
 	Ok(next.run(req).await)
 }
 
@@ -55,7 +81,7 @@ pub async fn mw_ctx_resolver(
 	next.run(req).await
 }
 
-async fn ctx_resolve(mm: ModelManager, cookies: &Cookies) -> CtxExtResult {
+pub async fn ctx_resolve(mm: ModelManager, cookies: &Cookies) -> CtxExtResult {
 	// -- Get Token String
 	let token = cookies
 		.get(AUTH_TOKEN)

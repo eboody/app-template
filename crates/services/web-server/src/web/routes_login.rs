@@ -19,7 +19,7 @@ pub fn routes(mm: ModelManager) -> Router {
 }
 
 // region:    --- Login
-async fn api_login_handler(
+pub async fn api_login_handler(
 	State(mm): State<ModelManager>,
 	cookies: Cookies,
 	Json(payload): Json<LoginPayload>,
@@ -73,14 +73,14 @@ async fn api_login_handler(
 }
 
 #[derive(Debug, Deserialize)]
-struct LoginPayload {
-	username: String,
-	pwd: String,
+pub struct LoginPayload {
+	pub username: String,
+	pub pwd: String,
 }
 // endregion: --- Login
 
 // region:    --- Logoff
-async fn api_logoff_handler(
+pub async fn api_logoff_handler(
 	cookies: Cookies,
 	Json(payload): Json<LogoffPayload>,
 ) -> Result<Json<Value>> {
@@ -102,7 +102,8 @@ async fn api_logoff_handler(
 }
 
 #[derive(Debug, Deserialize)]
-struct LogoffPayload {
+pub struct LogoffPayload {
 	logoff: bool,
 }
 // endregion: --- Logoff
+//
