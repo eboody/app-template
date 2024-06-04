@@ -1,33 +1,26 @@
 use axum::{
 	async_trait,
-	extract::{FromRef, FromRequestParts, State},
-	http::{header, request::Parts, HeaderName, HeaderValue, Response},
-	middleware,
+	body::Body,
+	extract::{FromRef, FromRequestParts, Request, State},
+	http::{header, request::Parts, HeaderValue},
+	middleware::{self, Next},
 	response::{Html, IntoResponse, Redirect},
 	routing::{get, post},
 	Form, Json, Router,
 };
 use axum_htmx::HxRequest;
-use lib_auth::pwd::{self, ContentToHash, SchemeStatus};
-use lib_core::{
-	ctx::Ctx,
-	model::{
-		user::{UserBmc, UserForLogin},
-		ModelManager,
-	},
-};
+use lib_core::model::ModelManager;
 use minijinja::{path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use serde::Deserialize;
-use serde_json::json;
 use std::sync::{Arc, RwLock};
 use tower_cookies::Cookies;
 use tracing::debug;
 
-use crate::web;
+use crate::web::{mw_auth::CtxExtError, AUTH_TOKEN};
 
 use super::{
-	mw_auth::{ctx_resolve, mw_ctx_require, mw_protected_page},
+	mw_auth::ctx_resolve,
 	routes_login::{self, api_login_handler},
 };
 
@@ -86,6 +79,33 @@ where
 		Ok(mm)
 	}
 }
+
+pub async fn mw_protected_page(
+	cookies: Cookies,
+	req: Request<Body>,
+	next: Next,
+) -> crate::web::Result<axum::response::Response> {
+	debug!("{:<12} - mw_protected_page - {req:?}", "MIDDLEWARE");
+
+	//If user navigated to a protected page without a valid token then redirect them to /
+	let token = cookies
+		.get(AUTH_TOKEN)
+		.map(|c| c.value().to_string())
+		.ok_or(CtxExtError::TokenNotInCookie);
+
+	let fetch_mode = req.headers().get("sec-fetch-mode");
+
+	if matches!(token, Err(CtxExtError::TokenNotInCookie)) {
+		println!("{:#?}", req.headers());
+		if let Some(fetch_mode) = fetch_mode {
+			if fetch_mode == "navigate" {
+				return Ok(Redirect::to("/").into_response());
+			}
+		}
+	}
+	Ok(next.run(req).await)
+}
+
 async fn home(TemplateEnv(env): TemplateEnv) -> Html<String> {
 	let tmpl = env.get_template("index.html").unwrap();
 

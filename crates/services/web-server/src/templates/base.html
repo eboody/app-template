@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+
     {% include "modules/signals.html" %}
     <script
       src="https://unpkg.com/htmx.org@1.9.12"
@@ -9,26 +12,53 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/gh/gnat/surreal@main/surreal.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/gnat/css-scope-inline@main/script.js"></script>
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="stylesheet" href="/styles.css" />
+
     <title>LETS GO!</title>
     {% block head %}{% endblock %}
   </head>
 
-  <body>
-    <div id="content">
+  <body hx-boost="true">
+    <main>
       <style>
-        me {
-          padding: var(--size-5);
+        main {
+          height: 100dvh;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
+          justify-content: center;
           align-items: center;
-          gap: 1rem;
+          background: var(--gradient-tertiary);
+          padding-bottom: 0px;
+          padding-block: var(--size-9);
+          padding-top: 0px;
+        }
+
+        @media (min-width: 1440px) {
+          main {
+            padding-inline: 0;
+          }
+        }
+
+        #content {
+          padding: var(--size-5) var(--size-9);
+          flex: 1;
+          overflow-y: auto;
         }
       </style>
-      {% block content %}
-      <p>Placeholder content</p>
-      {% endblock %}
-    </div>
+
+      <div id="content">
+        <style>
+          me {
+            padding: var(--size-5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+          }
+        </style>
+        {% block content %}
+        <p>Placeholder content</p>
+        {% endblock %}
+      </div>
+    </main>
   </body>
 </html>

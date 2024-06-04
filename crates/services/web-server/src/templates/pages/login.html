@@ -1,9 +1,21 @@
-<form hx-post="/login">
+<form hx-post="/login" hx-push-url="true">
+  <style>
+    me {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+    me input {
+      margin: var(--size-3);
+    }
+  </style>
+
   <label for="username">Username:</label>
-  <input type="text" id="username" name="username" required />
+  <input type="text" id="username" name="username" value="demo1" required />
   <br />
   <label for="password">Password:</label>
-  <input type="password" id="pwd" name="pwd" required />
+  <input type="password" id="pwd" name="pwd" value="welcome" required />
   <br />
   <button type="submit">Login</button>
 </form>
